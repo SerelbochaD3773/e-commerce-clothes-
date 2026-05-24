@@ -1,38 +1,44 @@
 import LoginPage from "../pages/LoginPage"
-import ProductsPage from "../pages/ProductsPage"
+import DashboardPage from "../pages/DashboardPage"
+import InventoryPage from "../pages/InventoryPage"
+import CustomerProducts from "../pages/CustomerProducts"
+import CartPage from "../pages/CartPage"
+import MainPage from "../pages/MainPage"
+import ContactPage from "../pages/ContactPage"
 import ProtectedRoute from "../pages/ProtectedRoute"
 import AdminLayout from "../layouts/AdminLayout"
-import App from "../App"
+import StoreLayout from "../layouts/StoreLayout"
 
 let routerApp = [
-    {
-        path: "/",
-        element: <App />,
+  {
+    element: <StoreLayout />,
+    children: [
+      { path: "/", element: <MainPage /> },
+      { path: "/productos", element: <CustomerProducts /> },
+      { path: "/contacto", element: <ContactPage /> },
+      { path: "/carrito", element: <CartPage /> },
+    ],
+  },
+  {
+    path: "/login",
+    element: <LoginPage />,
+  },
+  {
+    element: <ProtectedRoute />,
+    children: [
+      {
+        element: <AdminLayout />,
         children: [
-            {
-                path: "login",
-                element: <LoginPage />
-            },
-            {
-                element: <ProtectedRoute />,
-                children: [
-                    {
-                        element: <AdminLayout />,
-                        children: [
-                            {
-                                path: "productos",
-                                element: <ProductsPage />
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                path: "*",
-                element: <LoginPage />
-            }
-        ]
-    }
+          { path: "/admin", element: <DashboardPage /> },
+          { path: "/admin/productos", element: <InventoryPage /> },
+        ],
+      },
+    ],
+  },
+  {
+    path: "*",
+    element: <LoginPage />,
+  },
 ]
 
 export default routerApp
