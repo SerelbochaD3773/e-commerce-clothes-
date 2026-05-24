@@ -1,13 +1,1 @@
 @import "tailwindcss";
-
-.urban-gradient {
-  background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
-}
-
-.nav-link {
-  transition: color 0.3s ease;
-}
-
-.page {
-  min-height: calc(100vh - 64px);
-}
