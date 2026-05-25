@@ -1,4 +1,5 @@
-import LoginPage from "../pages/LoginPage"
+import LoginVelvora from "../pages/LoginVelvora"
+import RegistroVelvora from "../pages/RegistroVelvora"
 import DashboardPage from "../pages/DashboardPage"
 import InventoryPage from "../pages/InventoryPage"
 import CustomerProducts from "../pages/CustomerProducts"
@@ -21,7 +22,11 @@ let routerApp = [
   },
   {
     path: "/login",
-    element: <LoginPage />,
+    element: <LoginVelvora />,
+  },
+  {
+    path: "/registro",
+    element: <RegistroVelvora />,
   },
   {
     element: <ProtectedRoute />,
@@ -37,7 +42,7 @@ let routerApp = [
   },
   {
     path: "*",
-    element: <LoginPage />,
+    element: <LoginVelvora />,
   },
 ]
 
