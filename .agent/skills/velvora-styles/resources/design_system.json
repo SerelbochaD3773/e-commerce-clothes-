@@ -1,0 +1,98 @@
+{
+  "name": "assets/9c12afd5c98947549c489261c31435b0",
+  "displayName": "Velvora Identity System",
+  "theme": {
+    "colorMode": "DARK",
+    "font": "MONTSERRAT",
+    "roundness": "ROUND_FOUR",
+    "customColor": "#00f0ff",
+    "headlineFont": "MONTSERRAT",
+    "bodyFont": "MONTSERRAT",
+    "labelFont": "MONTSERRAT",
+    "namedColors": {
+      "background": "#131313",
+      "surface": "#131313",
+      "surface_bright": "#3a3939",
+      "surface_container": "#201f1f",
+      "surface_container_high": "#2a2a2a",
+      "surface_container_highest": "#353534",
+      "surface_container_low": "#1c1b1b",
+      "surface_container_lowest": "#0e0e0e",
+      "surface_dim": "#131313",
+      "primary": "#dbfcff",
+      "on_primary": "#00363a",
+      "primary_container": "#00f0ff",
+      "on_primary_container": "#006970",
+      "secondary": "#c6c6c7",
+      "on_secondary": "#2f3131",
+      "secondary_container": "#454747",
+      "on_secondary_container": "#b4b5b5",
+      "outline": "#849495",
+      "outline_variant": "#3b494b"
+    },
+    "typography": {
+      "display-xl": {
+        "fontFamily": "Montserrat",
+        "fontSize": "80px",
+        "fontWeight": "700",
+        "lineHeight": "88px",
+        "letterSpacing": "-0.04em"
+      },
+      "headline-lg": {
+        "fontFamily": "Montserrat",
+        "fontSize": "48px",
+        "fontWeight": "700",
+        "lineHeight": "56px",
+        "letterSpacing": "-0.02em"
+      },
+      "headline-lg-mobile": {
+        "fontFamily": "Montserrat",
+        "fontSize": "32px",
+        "fontWeight": "700",
+        "lineHeight": "40px",
+        "letterSpacing": "-0.01em"
+      },
+      "headline-md": {
+        "fontFamily": "Montserrat",
+        "fontSize": "24px",
+        "fontWeight": "600",
+        "lineHeight": "32px"
+      },
+      "body-lg": {
+        "fontFamily": "Montserrat",
+        "fontSize": "18px",
+        "fontWeight": "400",
+        "lineHeight": "28px"
+      },
+      "body-md": {
+        "fontFamily": "Montserrat",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "lineHeight": "24px"
+      },
+      "label-caps": {
+        "fontFamily": "Montserrat",
+        "fontSize": "12px",
+        "fontWeight": "700",
+        "lineHeight": "16px",
+        "letterSpacing": "0.1em"
+      },
+      "stat-display": {
+        "fontFamily": "Montserrat",
+        "fontSize": "40px",
+        "fontWeight": "300",
+        "lineHeight": "48px"
+      }
+    },
+    "spacing": {
+      "container-max": "1440px",
+      "gutter": "24px",
+      "margin-desktop": "40px",
+      "margin-mobile": "16px",
+      "stack-lg": "32px",
+      "stack-md": "16px",
+      "stack-sm": "8px"
+    }
+  },
+  "styleGuidelines": "## Brand & Style\n\nThis design system embodies a high-performance, technical aesthetic characterized by deep blacks and vibrant, \"electric\" accents. It is designed for an elite admin experience that feels both luxurious and surgically precise.\n\nThe visual direction combines **Minimalism** with **High-Contrast Boldness**. It leverages the sharp, geometric language of the Velvora logo—a metallic, angular chevron—to influence the UI’s structure. The interface should feel like a high-end cockpit: dark, focused, and energized by light-emitting interactive elements.\n\n**Key Brand Pillars:**\n*   **Precision:** Every pixel serves a functional purpose.\n*   **Energy:** The \"Volt\" blue acts as a digital current flowing through the data.\n*   **Sophistication:** A \"Noir\" foundation that prioritizes legibility and status.\n\n## Colors\n\nThe palette is strictly curated to maintain high-contrast accessibility and brand impact.\n\n*   **Primary (Electric Blue):** Used exclusively for interactive states, data highlights, and primary call-to-actions. It represents the \"Volt\" energy.\n*   **Neutral (Noir & Slate):** The background is a true black (#000000) to maximize contrast. Surface containers use deep charcoals (#0A0A0A) to create subtle depth without breaking the minimalist aesthetic.\n*   **Secondary (High-Gloss White):** Reserved for primary typography and essential icons to ensure maximum readability against the dark void.\n*   **Data Visualization:** In addition to the primary blue, use a monochromatic scale of greys and one supplemental \"Warning\" amber for critical dashboard alerts.\n\n## Typography\n\nMontserrat is used across all levels to maintain a clean, geometric, and modern architectural feel. \n\n*   **Display Scales:** Use heavy weights (700+) for page titles to anchor the layout. \n*   **Data Legibility:** For dashboard statistics, use a lighter weight (300) at large sizes to create a sophisticated, tech-forward \"meter\" look.\n*   **Navigation & Labels:** Utilize the `label-caps` style for sidebar headers and table headers to create a clear structural hierarchy.\n*   **Contrast:** Always use pure white or high-silver grey for text. Never use mid-tone greys on black backgrounds to avoid smearing and accessibility issues.\n\n## Layout & Spacing\n\nThe system utilizes a **Fixed Grid** model for the dashboard to ensure data density and alignment.\n\n*   **Grid:** A 12-column grid with 24px gutters. Elements should snap to the grid to reinforce the geometric precision of the Velvora brand.\n*   **Navigation:** The navigation is simplified to a fixed left-hand sidebar. By removing 'About Us', 'Store Locator', and 'Sustainability', the focus shifts entirely to 'Dashboard', 'Analytics', 'Inventory', and 'Settings'.\n*   **Breakpoints:**\n    *   **Desktop (1280px+):** Full 12-column visibility with persistent sidebar.\n    *   **Tablet (768px - 1279px):** Sidebar collapses to icons only; 8-column grid.\n    *   **Mobile (\u003c767px):** Single column flow; navigation moves to a bottom bar or simplified hamburger menu.\n\n## Elevation & Depth\n\nHierarchy is established through **Tonal Layers** and **Electric Glows** rather than traditional shadows.\n\n*   **Surface Hierarchy:** Level 0 is pure black (#000000). Level 1 (Cards/Sidebar) is a slightly lifted grey (#0A0A0A). Level 2 (Modals/Popovers) uses #1A1A1A with a 1px border.\n*   **Borders:** Use low-contrast \"Ghost Borders\" (1px solid #222) to define areas.\n*   **Interactive Glow:** When an element is active or hovered, apply a subtle outer glow using the Primary Electric Blue (0px 0px 12px rgba(0, 240, 255, 0.3)). This mimics the look of a backlit display.\n*   **Backdrop:** Use a heavy backdrop blur (20px) for modals to maintain the \"Noir\" atmosphere while focusing the user's attention.\n\n## Shapes\n\nTo mirror the sharp, metallic Velvora chevron, the shape language is **Soft-Geometric**.\n\n*   **Corner Radius:** A consistent 0.25rem (4px) radius is applied to buttons, input fields, and cards. This provides just enough \"touchability\" without losing the aggressive, technical edge.\n*   **Visual Metaphor:** Avoid completely circular buttons (except for icon-only toggles). The 4px radius should feel intentional and structural.\n*   **Data Vis Shapes:** Bar charts should have flat tops (0px radius) to maintain a professional, data-driven look.\n\n## Components\n\n### Interactive Data Visualization\n*   **Line Charts:** Use a 2px stroke of Primary Electric Blue. Fill the area under the line with a gradient from 20% opacity blue to 0% opacity.\n*   **Bar Graphs:** Use solid Primary Blue for the active data set. Background \"empty\" tracks should be #1A1A1A.\n*   **Tooltips:** High-contrast white background with black text to ensure they pop instantly against the dark dashboard.\n\n### Navigation & Inputs\n*   **Sidebar:** Minimalist vertical list. Active state is indicated by a 4px vertical \"Volt\" line on the left edge and white text. Inactive items are #888888.\n*   **Buttons:** \n    *   *Primary:* Solid Electric Blue background with Black text. \n    *   *Ghost:* 1px white border with white text; Blue border on hover.\n*   **Input Fields:** Dark background (#0A0A0A) with a 1px #222 border. On focus, the border transitions to Electric Blue.\n\n### Cards & Layout Units\n*   **KPI Cards:** Large `stat-display` numbers. Use a small spark-line chart at the bottom of the card to show 24-hour trends.\n*   **Tables:** No vertical lines. Use subtle horizontal separators (#1A1A1A). The header row should use `label-caps` typography."
+}
