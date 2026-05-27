@@ -1,11 +1,10 @@
 import { Link, useLocation } from "react-router-dom"
-import { LayoutDashboard, Package, LogOut } from "lucide-react"
 import { removeLocalStorage } from "../helpers/local-storage"
 import { redirectAlert } from "../helpers/alerts"
 
 const links = [
-  { to: "/admin", icon: LayoutDashboard, label: "Dashboard" },
-  { to: "/admin/productos", icon: Package, label: "Inventario" },
+  { to: "/admin", icon: "dashboard", label: "DASHBOARD" },
+  { to: "/admin/productos", icon: "inventory_2", label: "INVENTARIO" },
 ]
 
 function AdminSidebar() {
@@ -17,44 +16,59 @@ function AdminSidebar() {
   }
 
   return (
-    <aside className="flex h-screen w-64 flex-col border-r border-slate-200 bg-white">
-      <div className="flex items-center gap-2 border-b border-slate-200 px-5 py-5">
-        <div className="grid h-9 w-9 place-items-center rounded-lg bg-blue-600">
-          <span className="text-sm font-bold text-white">A</span>
+    <aside className="fixed left-0 top-0 h-full w-64 hidden lg:flex flex-col bg-surface-container-low border-r border-outline-variant py-stack-lg z-50">
+      <div className="px-6 mb-12">
+        <div className="mb-6">
+          <span className="text-3xl font-bold text-primary-container">V</span>
         </div>
-        <span className="text-sm font-bold tracking-tight text-slate-900">Admin Panel</span>
+        <div>
+          <h2 className="font-headline-md text-headline-md font-bold text-on-surface leading-tight">Velvora Admin</h2>
+          <p className="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest opacity-60">Elite Performance</p>
+        </div>
       </div>
 
-      <nav className="flex flex-1 flex-col gap-1 px-3 py-4">
+      <nav className="flex-1 px-2 space-y-2 overflow-y-auto custom-scrollbar">
         {links.map((link) => {
-          const Icon = link.icon
           const isActive = pathname === link.to
           return (
             <Link
               key={link.to}
               to={link.to}
-              className={`flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors ${
+              className={`flex items-center gap-4 p-4 transition-all group ${
                 isActive
-                  ? "bg-blue-50 text-blue-700"
-                  : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                  ? "border-l-4 border-primary-container bg-surface-container-highest text-on-surface font-bold"
+                  : "text-secondary hover:bg-surface-container-high hover:text-primary-container border-l-4 border-transparent"
               }`}
             >
-              <Icon className="h-4 w-4" />
-              {link.label}
+              <span
+                className={`material-symbols-outlined ${isActive ? "text-primary-container" : "group-hover:scale-110 transition-transform"}`}
+                style={isActive ? { fontVariationSettings: "'FILL' 1" } : undefined}
+              >
+                {link.icon}
+              </span>
+              <span className="font-label-caps text-label-caps">{link.label}</span>
             </Link>
           )
         })}
       </nav>
 
-      <div className="border-t border-slate-200 px-3 py-4">
-        <button
-          type="button"
-          onClick={handleLogout}
-          className="flex w-full cursor-pointer items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-red-600 transition-colors hover:bg-red-50"
-        >
-          <LogOut className="h-4 w-4" />
-          Cerrar sesión
+      <div className="px-4 mt-auto space-y-4">
+        <button className="w-full bg-primary-container text-on-primary-container py-3 px-4 font-label-caps text-label-caps font-bold active:scale-[0.98] transition-transform electric-glow uppercase">
+          Crear Oferta
         </button>
+        <div className="border-t border-outline-variant pt-4 flex flex-col gap-2">
+          <a className="text-secondary flex items-center gap-4 px-2 py-2 hover:text-on-surface transition-colors cursor-pointer" href="#">
+            <span className="material-symbols-outlined text-[20px]">help</span>
+            <span className="font-label-caps text-label-caps">SUPPORT</span>
+          </a>
+          <button
+            onClick={handleLogout}
+            className="text-secondary flex items-center gap-4 px-2 py-2 hover:text-error transition-colors cursor-pointer w-full text-left"
+          >
+            <span className="material-symbols-outlined text-[20px]">logout</span>
+            <span className="font-label-caps text-label-caps">LOGOUT</span>
+          </button>
+        </div>
       </div>
     </aside>
   )

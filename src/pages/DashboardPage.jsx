@@ -1,100 +1,227 @@
-import { useState, useEffect } from "react"
-import { getLocalStorage } from "../helpers/local-storage"
+import { useState, useEffect, useMemo } from "react"
 import { end_points } from "../services/api"
-import { Package, AlertTriangle, DollarSign, TrendingUp } from "lucide-react"
+import { getLocalStorage } from "../helpers/local-storage"
+import { questionAlert, successAlert, errorAlert } from "../helpers/alerts"
+import DashboardHeader from "../components/DashboardHeader"
+import DashboardKpiCard from "../components/DashboardKpiCard"
+import SalesChart from "../components/SalesChart"
+import CategoryBars from "../components/CategoryBars"
+import ProductTable from "../components/ProductTable"
+import ProductFormModal from "../components/ProductFormModal"
+import OrderTable from "../components/OrderTable"
+import OrderFormModal from "../components/OrderFormModal"
 
 function DashboardPage() {
   const [products, setProducts] = useState([])
+  const [orders, setOrders] = useState([])
   const [loading, setLoading] = useState(true)
   const session = getLocalStorage("session")
 
   useEffect(() => {
-    fetch(end_points.products)
-      .then((r) => r.json())
-      .then((data) => setProducts(data))
-      .catch(() => setProducts([]))
+    Promise.all([
+      fetch(end_points.products).then((r) => r.json()),
+      fetch(end_points.orders).then((r) => r.json()),
+    ])
+      .then(([productsData, ordersData]) => {
+        setProducts(Array.isArray(productsData) ? productsData : [])
+        setOrders(Array.isArray(ordersData) ? ordersData : [])
+      })
+      .catch(() => {
+        setProducts([])
+        setOrders([])
+      })
       .finally(() => setLoading(false))
   }, [])
 
   const totalProducts = products.length
   const lowStock = products.filter((p) => p.stock > 0 && p.stock <= 10).length
   const outOfStock = products.filter((p) => p.stock === 0).length
-  const totalValue = products.reduce((s, p) => s + (p.precio || 0) * (p.stock || 0), 0)
+  const totalSales = orders.reduce((s, o) => s + ((o.sale || 0) - (o.offer || 0)), 0)
+  const onlineVisitors = 432
+  const pendingOrders = orders.filter((o) => !o.paid).length
 
-  const cards = [
-    { label: "Productos", value: totalProducts, icon: Package, color: "blue" },
-    { label: "Stock bajo", value: lowStock, icon: AlertTriangle, color: "yellow" },
-    { label: "Agotados", value: outOfStock, icon: TrendingUp, color: "red" },
-    { label: "Valor inventario", value: `$${totalValue.toFixed(0)}`, icon: DollarSign, color: "green" },
-  ]
+  const categoryMap = useMemo(() => {
+    const map = {}
+    products.forEach((p) => {
+      const cat = p.categoria || "Sin categoría"
+      map[cat] = (map[cat] || 0) + 1
+    })
+    const total = Object.values(map).reduce((s, v) => s + v, 0)
+    return Object.entries(map)
+      .map(([name, count]) => ({ name, percentage: Math.round((count / total) * 100) }))
+      .sort((a, b) => b.percentage - a.percentage)
+      .slice(0, 3)
+  }, [products])
+
+  const salesChartData = useMemo(() => {
+    const months = ["ENE", "FEB", "MAR", "ABR", "MAY", "JUN", "JUL", "AGO", "SEP", "OCT", "NOV", "DIC"]
+    const now = new Date()
+    const monthly = Array.from({ length: 12 }, (_, i) => {
+      const m = (now.getMonth() - 11 + i + 12) % 12
+      return {
+        label: months[m],
+        value: 0,
+        month: m,
+        year: now.getFullYear() - (m > now.getMonth() ? 1 : 0),
+      }
+    })
+    orders.forEach((o) => {
+      if (!o.saledate) return
+      const d = new Date(o.saledate)
+      const idx = monthly.findIndex((m) => m.month === d.getMonth() && m.year === d.getFullYear())
+      if (idx !== -1) monthly[idx].value += (o.sale || 0) - (o.offer || 0)
+    })
+    return monthly
+  }, [orders])
+
+  const [productModal, setProductModal] = useState({ show: false, product: null })
+  const [orderModal, setOrderModal] = useState({ show: false, order: null })
+
+  function openCreateProduct() {
+    setProductModal({ show: true, product: null })
+  }
+
+  function openEditProduct(product) {
+    setProductModal({ show: true, product })
+  }
+
+  function closeProductModal() {
+    setProductModal({ show: false, product: null })
+  }
+
+  function handleSaveProduct(saved, isEdit) {
+    if (isEdit) {
+      setProducts((prev) => prev.map((p) => (p.id === saved.id ? saved : p)))
+      successAlert("Actualizado", "Producto actualizado correctamente")
+    } else {
+      setProducts((prev) => [...prev, saved])
+      successAlert("Creado", "Producto creado correctamente")
+    }
+  }
+
+  async function handleDeleteProduct(product) {
+    const confirmed = await questionAlert(
+      "Eliminar producto",
+      `¿Eliminar "${product.nombre}" del catálogo?`
+    )
+    if (!confirmed) return
+    try {
+      const res = await fetch(`${end_points.products}/${product.id}`, { method: "DELETE" })
+      if (!res.ok) throw new Error()
+      successAlert("Eliminado", "Producto eliminado correctamente")
+      setProducts((prev) => prev.filter((p) => p.id !== product.id))
+    } catch {
+      errorAlert("Error", "No se pudo eliminar el producto")
+    }
+  }
+
+  function openCreateOrder() {
+    setOrderModal({ show: true, order: null })
+  }
+
+  function openEditOrder(order) {
+    setOrderModal({ show: true, order })
+  }
+
+  function closeOrderModal() {
+    setOrderModal({ show: false, order: null })
+  }
+
+  function handleSaveOrder(saved, isEdit) {
+    if (isEdit) {
+      setOrders((prev) => prev.map((o) => (o.id === saved.id ? saved : o)))
+      successAlert("Actualizada", "Orden actualizada correctamente")
+    } else {
+      setOrders((prev) => [...prev, saved])
+      successAlert("Creada", "Orden creada correctamente")
+    }
+  }
+
+  async function handleDeleteOrder(order) {
+    const confirmed = await questionAlert(
+      "Eliminar orden",
+      `¿Eliminar la orden #${order.id} de "${order.username}"?`
+    )
+    if (!confirmed) return
+    try {
+      const res = await fetch(`${end_points.orders}/${order.id}`, { method: "DELETE" })
+      if (!res.ok) throw new Error()
+      successAlert("Eliminada", "Orden eliminada correctamente")
+      setOrders((prev) => prev.filter((o) => o.id !== order.id))
+    } catch {
+      errorAlert("Error", "No se pudo eliminar la orden")
+    }
+  }
 
   return (
-    <div>
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900">Dashboard</h1>
-        <p className="mt-1 text-sm text-slate-500">
-          Bienvenido, {session?.username || "admin"}
-        </p>
-      </div>
+    <div className="space-y-stack-lg">
+      <DashboardHeader username={session?.username} />
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {cards.map((card) => {
-          const Icon = card.icon
-          const colorMap = {
-            blue: "bg-blue-50 text-blue-600",
-            yellow: "bg-yellow-50 text-yellow-600",
-            red: "bg-red-50 text-red-600",
-            green: "bg-green-50 text-green-600",
-          }
-          return (
-            <div
-              key={card.label}
-              className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
-            >
-              <div className="flex items-center justify-between">
-                <p className="text-xs font-medium text-slate-500">{card.label}</p>
-                <div className={`grid h-8 w-8 place-items-center rounded-xl ${colorMap[card.color]}`}>
-                  <Icon className="h-4 w-4" />
-                </div>
-              </div>
-              <p className="mt-3 text-2xl font-bold text-slate-900">
-                {loading ? (
-                  <span className="inline-block h-6 w-16 animate-pulse rounded bg-slate-200" />
-                ) : (
-                  card.value
-                )}
-              </p>
-            </div>
-          )
-        })}
-      </div>
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+        <DashboardKpiCard
+          label="VENTAS TOTALES"
+          value={`$${totalSales.toLocaleString("es-MX", { minimumFractionDigits: 2 })}`}
+          icon={() => (
+            <svg className="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+              <polyline points="17 6 23 6 23 12" />
+            </svg>
+          )}
+          trendLabel="Basado en órdenes reales"
+          loading={loading}
+        />
+        <DashboardKpiCard
+          label="PEDIDOS NUEVOS"
+          value={loading ? "" : orders.length.toLocaleString()}
+          icon={() => <span className="material-symbols-outlined text-[18px]">shopping_cart</span>}
+          trendLabel={`${pendingOrders} En Proceso`}
+          loading={loading}
+        />
+        <DashboardKpiCard
+          label="VISITANTES ONLINE"
+          value={onlineVisitors.toLocaleString()}
+          icon={() => <span className="material-symbols-outlined text-[18px]">groups</span>}
+          trendLabel={`Pico: ${(onlineVisitors * 2).toFixed(0)} (Hoy)`}
+          loading={loading}
+        />
+      </section>
 
-      <div className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h2 className="text-sm font-semibold text-slate-900">Últimos productos</h2>
-        {loading ? (
-          <div className="mt-4 space-y-3">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="h-10 animate-pulse rounded-xl bg-slate-100" />
-            ))}
-          </div>
-        ) : products.length === 0 ? (
-          <p className="mt-4 text-sm text-slate-400">No hay productos registrados</p>
-        ) : (
-          <div className="mt-4 divide-y divide-slate-100">
-            {products.slice(-5).reverse().map((p) => (
-              <div key={p.id} className="flex items-center justify-between py-3">
-                <div>
-                  <p className="text-sm font-medium text-slate-900">{p.nombre}</p>
-                  <p className="text-xs text-slate-400">{p.categoria}</p>
-                </div>
-                <span className="text-sm font-semibold text-slate-900">
-                  ${p.precio?.toFixed(2)}
-                </span>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+      <section className="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+        <SalesChart data={salesChartData} loading={loading} />
+        <CategoryBars categories={categoryMap} loading={loading} />
+      </section>
+
+      <ProductTable
+        products={products}
+        loading={loading}
+        onCreate={openCreateProduct}
+        onEdit={openEditProduct}
+        onDelete={handleDeleteProduct}
+      />
+
+      <OrderTable
+        orders={orders}
+        products={products}
+        loading={loading}
+        onCreate={openCreateOrder}
+        onEdit={openEditOrder}
+        onDelete={handleDeleteOrder}
+      />
+
+      <ProductFormModal
+        show={productModal.show}
+        product={productModal.product}
+        onSave={handleSaveProduct}
+        onClose={closeProductModal}
+      />
+
+      <OrderFormModal
+        show={orderModal.show}
+        order={orderModal.order}
+        products={products}
+        onSave={handleSaveOrder}
+        onClose={closeOrderModal}
+      />
     </div>
   )
 }

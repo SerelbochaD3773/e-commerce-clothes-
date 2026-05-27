@@ -1,8 +1,8 @@
 ---
 title: Especificaciones — Panel Admin E-commerce (Inventario)
-version: 1.0.0
+version: 1.1.0
 status: vigente
-ultima_actualizacion: 2026-05-24
+ultima_actualizacion: 2026-05-26
 ---
 
 # Especificaciones del Sistema
@@ -126,6 +126,11 @@ ultima_actualizacion: 2026-05-24
 | categoria  | texto    | sí        | Selección de lista fija   |
 | stock      | número   | sí        | ≥ 0                       |
 | imagen     | URL/texto| no        | Si se ingresa, debe ser URL válida |
+| sku        | texto    | no        | Código único de producto  |
+| gender     | texto    | no        | unisex / hombre / mujer   |
+| talla      | texto    | no        | S / M / L / XL            |
+| color      | array    | no        | Multi-selección: gris, blanco, negro, azul, rojo, cafe |
+| ajuste     | texto    | no        | regular / slim / holgado  |
 
 ---
 
@@ -136,15 +141,36 @@ ultima_actualizacion: 2026-05-24
 ```json
 {
   "id": "1",
+  "createdAt": "2026-05-01T00:00:00.000Z",
   "nombre": "Camiseta Urban Negra",
   "precio": 29.99,
   "categoria": "Ropa",
   "stock": 150,
-  "imagen": "https://placehold.co/300x300/1a1a2e/ffffff?text=Producto"
+  "imagen": "https://placehold.co/300x300",
+  "sku": "SKU-001",
+  "gender": "unisex",
+  "talla": "M",
+  "color": ["negro", "blanco"],
+  "ajuste": "regular"
 }
 ```
 
-Categorías válidas: `Ropa`, `Electrónica`, `Hogar`, `Deportes`, `Accesorios`.
+Categorías válidas: `Busos`, `Tenis`, `Camisetas`, `Pantalones`, `Shorts`, `bluejeans`, `Gorras`, `camisas`, `chaquetas`, `Blusas`.
+
+### 4.3 Entidad Orden
+
+```json
+{
+  "id": "1",
+  "createdAt": "2026-05-15T00:00:00.000Z",
+  "saledate": "2026-05-15",
+  "username": "cliente1",
+  "products": ["1", "3", "7"],
+  "sale": 89.97,
+  "offer": 0,
+  "paid": true
+}
+```
 
 ### 4.2 Sesión (LocalStorage)
 
@@ -160,15 +186,17 @@ Categorías válidas: `Ropa`, `Electrónica`, `Hogar`, `Deportes`, `Accesorios`.
 
 ## 5. API Contract
 
-Base URL: `https://[tu-instancia].mockapi.io/api/v1/`
+Base URL: `https://6a150b2a91ff9a63de075a78.mockapi.io`
 
-| Método | Endpoint              | Body                           | Respuesta éxito              |
-|--------|-----------------------|--------------------------------|------------------------------|
-| GET    | `/productos`          | —                              | `Producto[]`                 |
-| GET    | `/productos/:id`      | —                              | `Producto`                   |
-| POST   | `/productos`          | `{ nombre, precio, categoria, stock, imagen }` | `Producto` (con id) |
-| PUT    | `/productos/:id`      | `{ nombre, precio, categoria, stock, imagen }` | `Producto`          |
-| DELETE | `/productos/:id`      | —                              | `{}`                         |
+| Método | Endpoint              | Body                                    | Respuesta éxito              |
+|--------|-----------------------|-----------------------------------------|------------------------------|
+| GET    | `/products`           | —                                       | `Producto[]`                 |
+| GET    | `/products/:id`       | —                                       | `Producto`                   |
+| POST   | `/products`           | `{ nombre, precio, categoria, stock, imagen, sku, gender, talla, color, ajuste }` | `Producto` (con id) |
+| PUT    | `/products/:id`       | `{ nombre, precio, categoria, stock, imagen, sku, gender, talla, color, ajuste }` | `Producto`          |
+| DELETE | `/products/:id`       | —                                       | `{}`                         |
+| GET    | `/order`              | —                                       | `Orden[]`                    |
+| POST   | `/order`              | `{ saledate, username, products, sale, offer, paid }` | `Orden` (con id)  |
 
 Códigos de error esperados: `400` (validación), `404` (no encontrado), `500` (servidor).
 

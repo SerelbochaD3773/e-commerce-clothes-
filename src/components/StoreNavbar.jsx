@@ -1,54 +1,76 @@
 import { Link } from "react-router-dom"
-import { ShoppingCart, LayoutDashboard } from "lucide-react"
+import { useCart } from "../context/CartContext"
+import { getLocalStorage } from "../helpers/local-storage"
 
-function StoreNavbar({ cartCount = 0 }) {
+function StoreNavbar() {
+  const { totalItems } = useCart()
+  const session = getLocalStorage("session")
+
   return (
-    <nav className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur-lg">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Link to="/" className="flex items-center gap-2">
-          <div className="grid h-9 w-9 place-items-center rounded-lg bg-blue-600">
-            <span className="text-sm font-bold text-white">U</span>
-          </div>
-          <span className="text-lg font-bold tracking-tight text-slate-900">
-            Urban Threads
-          </span>
-        </Link>
-
-        <div className="hidden items-center gap-6 md:flex">
-          <Link to="/" className="text-sm font-medium text-slate-600 transition-colors hover:text-slate-900">
+    <header className="fixed top-0 z-50 w-full bg-surface/80 backdrop-blur-xl border-b border-outline-variant shadow-[0_0_15px_rgba(0,240,255,0.1)]">
+      <nav className="flex justify-between items-center w-full px-margin-desktop py-4 max-w-container-max mx-auto">
+        <div className="flex items-center gap-stack-lg">
+          <Link to="/" className="flex items-center gap-3">
+            <img
+              alt="Velvora Logo"
+              className="h-10 w-10 object-contain"
+              src="/Velvora_logo.png"
+            />
+            <span className="font-headline-md text-headline-md font-bold tracking-tighter text-primary">
+              Velvora
+            </span>
+          </Link>
+        </div>
+        <div className="hidden md:flex items-center gap-gutter">
+          <Link
+            to="/"
+            className="text-on-surface-variant font-body-md text-body-md hover:text-primary transition-colors duration-300"
+          >
             Inicio
           </Link>
-          <Link to="/productos" className="text-sm font-medium text-slate-600 transition-colors hover:text-slate-900">
-            Productos
-          </Link>
-          <Link to="/contacto" className="text-sm font-medium text-slate-600 transition-colors hover:text-slate-900">
-            Contacto
-          </Link>
         </div>
-
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-stack-md">
+          {session ? (
+            <div className="flex items-center gap-stack-sm pr-stack-md border-r border-outline-variant">
+              <span className="material-symbols-outlined text-primary-fixed-dim">account_circle</span>
+              <span className="font-label-caps text-label-caps text-on-surface">{session.username || "Usuario"}</span>
+            </div>
+          ) : (
+            <div className="hidden md:flex items-center gap-stack-sm pr-stack-md border-r border-outline-variant">
+              <Link
+                to="/login"
+                className="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors"
+              >
+                Iniciar Sesión
+              </Link>
+              <Link
+                to="/registro"
+                className="font-label-caps text-label-caps text-primary hover:text-primary-fixed-dim transition-colors"
+              >
+                Registrarse
+              </Link>
+            </div>
+          )}
           <Link
             to="/carrito"
-            className="relative inline-flex items-center rounded-xl p-2 text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900"
-            aria-label="Carrito de compras"
+            className="relative p-2 hover:text-primary transition-colors duration-300"
           >
-            <ShoppingCart className="h-5 w-5" />
-            {cartCount > 0 && (
-              <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-[10px] font-bold text-white">
-                {cartCount > 99 ? "99+" : cartCount}
-              </span>
+            <span className="material-symbols-outlined">shopping_cart</span>
+            {totalItems > 0 && (
+              <span className="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full shadow-[0_0_5px_rgba(0,240,255,1)]" />
             )}
           </Link>
-          <Link
-            to="/login"
-            className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900"
-          >
-            <LayoutDashboard className="h-4 w-4" />
-            Admin
-          </Link>
+          {session && (
+            <Link
+              to="/admin"
+              className="btn-volt px-4 py-2 rounded-full font-label-caps text-label-caps uppercase tracking-widest text-[10px]"
+            >
+              Admin
+            </Link>
+          )}
         </div>
-      </div>
-    </nav>
+      </nav>
+    </header>
   )
 }
 

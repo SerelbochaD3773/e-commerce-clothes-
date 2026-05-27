@@ -1,6 +1,6 @@
 ---
 title: Constitución del Proyecto — Panel Admin E-commerce (Inventario)
-version: 2.0.0
+version: 2.2.0
 status: vigente
 ultima_actualizacion: 2026-05-24
 ---
@@ -33,6 +33,7 @@ ultima_actualizacion: 2026-05-24
 | Alertas     | SweetAlert2       | 11      | Modales y notificaciones        |
 | Linter      | ESLint            | 10      | Calidad de código               |
 | API Mock    | MockAPI / JSON Server | —    | Backend REST simulado           |
+| Imágenes    | Cloudinary           | —    | Gestión y optimización de imágenes |
 
 ### 2.1 Justificación
 
@@ -42,6 +43,7 @@ ultima_actualizacion: 2026-05-24
 - **SweetAlert2**: alertas modales consistentes (obligatorio para confirmación DELETE).
 - **Axios**: interceptores y mejor manejo de errores que fetch nativo.
 - **MockAPI**: backend REST funcional sin servidor propio.
+- **Cloudinary**: almacenamiento, transformación y entrega optimizada de imágenes vía CDN.
 
 ---
 
@@ -153,15 +155,36 @@ comercio-electronico/
 ```json
 {
   "id": "1",
+  "createdAt": "2026-05-01T00:00:00.000Z",
   "nombre": "Camiseta Urban Negra",
   "precio": 29.99,
   "categoria": "Ropa",
   "stock": 150,
-  "imagen": "https://placehold.co/300x300/1a1a2e/ffffff?text=Producto"
+  "imagen": "https://placehold.co/300x300",
+  "sku": "SKU-001",
+  "gender": "unisex",
+  "talla": "M",
+  "color": ["negro", "blanco"],
+  "ajuste": "regular"
 }
 ```
 
-Categorías: `Ropa`, `Electrónica`, `Hogar`, `Deportes`, `Accesorios`.
+### 5.3 Orden (MockAPI)
+
+```json
+{
+  "id": "1",
+  "createdAt": "2026-05-15T00:00:00.000Z",
+  "saledate": "2026-05-15",
+  "username": "cliente1",
+  "products": ["1", "3", "7"],
+  "sale": 89.97,
+  "offer": 0,
+  "paid": true
+}
+```
+
+Categorías: `Busos`, `Tenis`, `Camisetas`, `Pantalones`, `Shorts`, `bluejeans`, `Gorras`, `camisas`, `chaquetas`, `Blusas`.
 
 ### 5.2 Sesión (LocalStorage)
 
@@ -177,15 +200,17 @@ Categorías: `Ropa`, `Electrónica`, `Hogar`, `Deportes`, `Accesorios`.
 
 ## 6. Servicios / API
 
-Base URL: `https://[instancia].mockapi.io/api/v1/`
+Base URL: `https://6a150b2a91ff9a63de075a78.mockapi.io`
 
-| Método | Endpoint           | Descripción                |
-|--------|--------------------|----------------------------|
-| GET    | `/productos`       | Listar todos los productos |
-| GET    | `/productos/:id`   | Obtener un producto        |
-| POST   | `/productos`       | Crear nuevo producto       |
-| PUT    | `/productos/:id`   | Actualizar producto        |
-| DELETE | `/productos/:id`   | Eliminar producto          |
+| Método | Endpoint           | Descripción                     |
+|--------|--------------------|---------------------------------|
+| GET    | `/products`        | Listar todos los productos      |
+| GET    | `/products/:id`    | Obtener un producto             |
+| POST   | `/products`        | Crear nuevo producto            |
+| PUT    | `/products/:id`    | Actualizar producto             |
+| DELETE | `/products/:id`    | Eliminar producto               |
+| GET    | `/order`           | Listar todas las órdenes        |
+| POST   | `/order`           | Crear una nueva orden           |
 
 ---
 

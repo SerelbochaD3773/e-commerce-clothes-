@@ -1,15 +1,15 @@
 import { Outlet } from "react-router-dom"
 import StoreNavbar from "../components/StoreNavbar"
 import StoreFooter from "../components/StoreFooter"
-import { useCart } from "../context/CartContext"
+import AmbientParticles from "../components/AmbientParticles"
 
 function StoreLayout() {
-  const { totalItems } = useCart()
-
   return (
-    <div className="flex min-h-screen flex-col bg-slate-50">
-      <StoreNavbar cartCount={totalItems} />
-      <main className="flex-1">
+    <div className="min-h-screen bg-background text-on-surface font-body-md antialiased">
+      <AmbientParticles count={15} />
+      <div className="gradient-mesh" />
+      <StoreNavbar />
+      <main className="flex-1 pt-24">
         <Outlet />
       </main>
       <StoreFooter />

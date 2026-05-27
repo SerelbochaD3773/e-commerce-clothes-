@@ -1,3 +1,4 @@
+import { Navigate } from "react-router-dom"
 import LoginVelvora from "../pages/LoginVelvora"
 import RegistroVelvora from "../pages/RegistroVelvora"
 import DashboardPage from "../pages/DashboardPage"
@@ -7,6 +8,7 @@ import CartPage from "../pages/CartPage"
 import MainPage from "../pages/MainPage"
 import ContactPage from "../pages/ContactPage"
 import ProtectedRoute from "../pages/ProtectedRoute"
+import PublicRoute from "../pages/PublicRoute"
 import AdminLayout from "../layouts/AdminLayout"
 import StoreLayout from "../layouts/StoreLayout"
 
@@ -21,12 +23,11 @@ let routerApp = [
     ],
   },
   {
-    path: "/login",
-    element: <LoginVelvora />,
-  },
-  {
-    path: "/registro",
-    element: <RegistroVelvora />,
+    element: <PublicRoute />,
+    children: [
+      { path: "/login", element: <LoginVelvora /> },
+      { path: "/registro", element: <RegistroVelvora /> },
+    ],
   },
   {
     element: <ProtectedRoute />,
@@ -42,7 +43,7 @@ let routerApp = [
   },
   {
     path: "*",
-    element: <LoginVelvora />,
+    element: <Navigate to="/login" replace />,
   },
 ]
 

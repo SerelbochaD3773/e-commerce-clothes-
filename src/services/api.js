@@ -1,5 +1,6 @@
-const URL_BASE = "https://66f1724a4153791915503dd0.mockapi.io/api/v1"
+const URL_BASE = "https://6a150b2a91ff9a63de075a78.mockapi.io"
 
 export let end_points = {
     products: `${URL_BASE}/products`,
+    orders: `${URL_BASE}/order`,
 }

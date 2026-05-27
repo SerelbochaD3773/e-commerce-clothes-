@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import { saveLocalStorage } from '../helpers/local-storage';
 
 function LoginVelvora() {
   const [email, setEmail] = useState('');
@@ -8,15 +9,6 @@ function LoginVelvora() {
   const [remember, setRemember] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    LoginVelvora();
-  }, []);
-
-  function LoginVelvora() {
-
-  }
-
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -34,19 +26,20 @@ function LoginVelvora() {
     }
 
     setLoading(true);
-    // Simular inicio de sesión
+    const username = email.split('@')[0];
+    saveLocalStorage('session', { username, email });
     setTimeout(() => {
       setLoading(false);
       Swal.fire({
         title: '¡Acceso Concedido!',
-        text: `Bienvenido de vuelta, ${email}`,
+        text: `Bienvenido de vuelta, ${username}`,
         icon: 'success',
         background: '#201f1f',
         color: '#e5e2e1',
         confirmButtonColor: '#00f0ff',
-        confirmButtonText: 'Ir a la Tienda'
+        confirmButtonText: 'Ir al Dashboard'
       }).then(() => {
-        navigate('/');
+        navigate('/admin');
       });
     }, 1200);
   };
