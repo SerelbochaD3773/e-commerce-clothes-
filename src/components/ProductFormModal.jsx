@@ -7,7 +7,7 @@ const genderOptions = ["unisex", "hombre", "mujer"]
 const tallaOptions = ["S", "M", "L", "XL"]
 const ajusteOptions = ["regular", "slim", "holgado"]
 
-const colorOptions = ["gris", "blanco", "negro", "azul", "rojo", "cafe"]
+const colorOptions = ["gris", "blanco", "negro", "azul", "rojo", "cafe", "verde"]
 const colorHexMap = {
   gris: "#6B7280",
   blanco: "#FFFFFF",
@@ -15,6 +15,7 @@ const colorHexMap = {
   azul: "#2563EB",
   rojo: "#DC2626",
   cafe: "#8B4513",
+  verde: "#16A34A",
 }
 
 const emptyForm = {

@@ -8,6 +8,7 @@ const colorHexMap = {
   azul: "#2563EB",
   rojo: "#DC2626",
   cafe: "#8B4513",
+  verde: "#16A34A",
 }
 
 function ProductTable({ products = [], loading, onEdit, onDelete, onCreate }) {

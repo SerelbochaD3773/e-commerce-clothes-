@@ -129,7 +129,7 @@ ultima_actualizacion: 2026-05-26
 | sku        | texto    | no        | Código único de producto  |
 | gender     | texto    | no        | unisex / hombre / mujer   |
 | talla      | texto    | no        | S / M / L / XL            |
-| color      | array    | no        | Multi-selección: gris, blanco, negro, azul, rojo, cafe |
+| color      | array    | no        | Multi-selección: gris, blanco, negro, azul, rojo, cafe, verde |
 | ajuste     | texto    | no        | regular / slim / holgado  |
 
 ---
