@@ -54,9 +54,6 @@ function AdminSidebar() {
       </nav>
 
       <div className="px-4 mt-auto space-y-4">
-        <button className="w-full bg-primary-container text-on-primary-container py-3 px-4 font-label-caps text-label-caps font-bold active:scale-[0.98] transition-transform electric-glow uppercase">
-          Crear Oferta
-        </button>
         <div className="border-t border-outline-variant pt-4 flex flex-col gap-2">
           <a className="text-secondary flex items-center gap-4 px-2 py-2 hover:text-on-surface transition-colors cursor-pointer" href="#">
             <span className="material-symbols-outlined text-[20px]">help</span>

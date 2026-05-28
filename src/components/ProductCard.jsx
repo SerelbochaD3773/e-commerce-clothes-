@@ -10,13 +10,21 @@ const imageMap = {
   zapatillas: "/imagenes/card-zapatillas.png",
 }
 
+function fixImageUrl(url) {
+  if (!url) return url
+  return url.replace(
+    "https://github.com/",
+    "https://raw.githubusercontent.com/"
+  ).replace("/blob/", "/")
+}
+
 function getImageSrc(product) {
   if (!product) return null
   const key = (product.image || product.nombre || "").toLowerCase()
   for (const [keyword, path] of Object.entries(imageMap)) {
     if (key.includes(keyword)) return path
   }
-  return product.imagen || null
+  return fixImageUrl(product.imagen) || null
 }
 
 const stockConfig = {

@@ -4,6 +4,23 @@ import { end_points } from "../services/api"
 import { getLocalStorage } from "../helpers/local-storage"
 import CatalogFilterSidebar from "../components/CatalogFilterSidebar"
 
+const colorMap = {
+  negro: "bg-black",
+  blanco: "bg-white",
+  gris: "bg-zinc-500",
+  azul: "bg-blue-600",
+  verde: "bg-green-600",
+  cafe: "bg-amber-800",
+}
+
+function fixImageUrl(url) {
+  if (!url) return url
+  return url.replace(
+    "https://github.com/",
+    "https://raw.githubusercontent.com/"
+  ).replace("/blob/", "/")
+}
+
 function CatalogPage() {
   const navigate = useNavigate()
   const session = getLocalStorage("session")
@@ -15,7 +32,7 @@ function CatalogPage() {
     size: null,
     color: null,
     fit: null,
-    price: 500,
+    price: 300000,
   })
 
   useEffect(() => {
@@ -27,6 +44,26 @@ function CatalogPage() {
       .catch(() => setProducts([]))
       .finally(() => setLoading(false))
   }, [])
+
+  const { categories, sizes, colors, fits } = useMemo(() => {
+    const cats = [...new Set(products.map((p) => p.categoria).filter(Boolean))]
+    const szs = [...new Set(products.map((p) => p.talla || p.size).filter(Boolean))].sort()
+    const cols = [
+      ...new Set(
+        products.flatMap((p) => (Array.isArray(p.color) ? p.color : []))
+      ),
+    ]
+    const fts = [...new Set(products.map((p) => p.ajuste).filter(Boolean))]
+    return {
+      categories: cats,
+      sizes: szs,
+      colors: cols.map((c) => ({
+        label: c.charAt(0).toUpperCase() + c.slice(1),
+        class: colorMap[c.toLowerCase()] || "bg-zinc-400",
+      })),
+      fits: fts,
+    }
+  }, [products])
 
   const filtered = useMemo(() => {
     let result = products
@@ -50,20 +87,34 @@ function CatalogPage() {
 
     if (filters.size) {
       result = result.filter((p) => {
-        const sizes = p.talla || p.size || ""
-        return sizes.toLowerCase().includes(filters.size.toLowerCase())
+        const s = p.talla || p.size || ""
+        return s.toLowerCase() === filters.size.toLowerCase()
       })
     }
 
-    if (filters.price < 500) {
-      result = result.filter((p) => (p.precio || 0) <= filters.price)
+    if (filters.color) {
+      result = result.filter((p) => {
+        const productColors = Array.isArray(p.color) ? p.color : []
+        return productColors.some(
+          (c) => c.toLowerCase() === filters.color.toLowerCase()
+        )
+      })
     }
+
+    if (filters.fit) {
+      result = result.filter((p) => {
+        const a = p.ajuste || ""
+        return a.toLowerCase() === filters.fit.toLowerCase()
+      })
+    }
+
+    result = result.filter((p) => (p.precio || 0) <= filters.price)
 
     return result
   }, [products, query, filters])
 
   function resetFilters() {
-    setFilters({ categories: [], size: null, color: null, fit: null, price: 500 })
+    setFilters({ categories: [], size: null, color: null, fit: null, price: 300000 })
     setQuery("")
   }
 
@@ -89,20 +140,6 @@ function CatalogPage() {
                 VELVORA
               </span>
             </Link>
-            <nav className="hidden lg:flex items-center gap-8">
-              <Link
-                to="/productos"
-                className="text-primary-container font-bold border-b-2 border-primary-container pb-1 font-label-caps text-label-caps transition-all"
-              >
-                Catalog
-              </Link>
-              <a className="text-on-surface-variant font-label-caps text-label-caps hover:text-primary-container transition-colors duration-200 cursor-pointer" href="#">
-                Collections
-              </a>
-              <a className="text-on-surface-variant font-label-caps text-label-caps hover:text-primary-container transition-colors duration-200 cursor-pointer" href="#">
-                New Arrivals
-              </a>
-            </nav>
           </div>
           <div className="flex items-center gap-6">
             <div className="hidden md:flex items-center bg-surface-container-high px-4 py-2 rounded-full border border-outline-variant">
@@ -146,9 +183,16 @@ function CatalogPage() {
       </header>
 
       <main className="pt-20 min-h-screen flex flex-1">
-        <CatalogFilterSidebar filters={filters} onChange={setFilters} onReset={resetFilters} />
+        <CatalogFilterSidebar
+          filters={filters}
+          onChange={setFilters}
+          onReset={resetFilters}
+          categories={categories}
+          sizes={sizes}
+          colors={colors}
+          fits={fits}
+        />
 
-        {/* Product Grid Area */}
         <section className="flex-1 lg:ml-72 p-margin-mobile md:p-margin-desktop bg-surface overflow-y-auto">
           <div className="max-w-7xl mx-auto">
             <header className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
@@ -205,7 +249,7 @@ function CatalogPage() {
                       {product.imagen && !imgErrors[product.id] ? (
                         <img
                           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-90 group-hover:opacity-100"
-                          src={product.imagen}
+                          src={fixImageUrl(product.imagen)}
                           alt={product.nombre || "Producto"}
                           onError={() => handleImgError(product.id)}
                           loading="lazy"
@@ -227,13 +271,6 @@ function CatalogPage() {
                           </span>
                         </div>
                       )}
-                      {product.tag && (
-                        <div className="absolute top-4 left-4">
-                          <span className="px-3 py-1 bg-error-container text-on-error-container font-label-caps text-[10px] uppercase">
-                            {product.tag}
-                          </span>
-                        </div>
-                      )}
                     </div>
                     <div className="p-4 flex flex-col gap-1">
                       <span className="font-label-caps text-label-caps text-on-secondary-container uppercase">
@@ -244,7 +281,7 @@ function CatalogPage() {
                       </h3>
                       <div className="mt-2 flex items-center justify-between">
                         <span className="font-headline-md text-headline-md text-primary-container">
-                          ${(product.precio || 0).toFixed(2)}
+                          ${Number(product.precio || 0).toLocaleString('es-CO')}
                         </span>
                         <button className="flex items-center gap-2 font-label-caps text-label-caps uppercase px-6 py-2 bg-primary-container text-on-primary font-bold hover:shadow-[0_0_15px_rgba(0,240,255,0.4)] active:scale-95 transition-all">
                           AÑADIR
@@ -253,21 +290,6 @@ function CatalogPage() {
                     </div>
                   </div>
                 ))}
-              </div>
-            )}
-
-            {filtered.length > 0 && (
-              <div className="mt-20 flex flex-col items-center gap-6">
-                <button className="px-12 py-4 border border-outline-variant text-on-surface font-label-caps text-label-caps uppercase tracking-widest hover:border-primary-container hover:text-primary-container transition-all">
-                  Cargar Más
-                </button>
-                <div className="flex items-center gap-4 text-on-secondary-container">
-                  <span className="text-primary-container font-bold">1</span>
-                  <a className="hover:text-on-surface transition-colors cursor-pointer" href="#">2</a>
-                  <a className="hover:text-on-surface transition-colors cursor-pointer" href="#">3</a>
-                  <span className="mx-2">...</span>
-                  <a className="hover:text-on-surface transition-colors cursor-pointer" href="#">8</a>
-                </div>
               </div>
             )}
           </div>
