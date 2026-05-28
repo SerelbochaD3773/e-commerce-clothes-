@@ -8,6 +8,11 @@ const links = [
   { to: "/admin/reportes", icon: "summarize", label: "REPORTES" },
 ]
 
+const storeLinks = [
+  { to: "/", icon: "store", label: "TIENDA" },
+  { to: "/productos", icon: "shopping_bag", label: "CATÁLOGO" },
+]
+
 function AdminSidebar() {
   const { pathname } = useLocation()
 
@@ -55,10 +60,22 @@ function AdminSidebar() {
 
       <div className="px-4 mt-auto space-y-4">
         <div className="border-t border-outline-variant pt-4 flex flex-col gap-2">
-          <a className="text-secondary flex items-center gap-4 px-2 py-2 hover:text-on-surface transition-colors cursor-pointer" href="#">
-            <span className="material-symbols-outlined text-[20px]">help</span>
-            <span className="font-label-caps text-label-caps">SUPPORT</span>
-          </a>
+          <p className="font-label-caps text-label-caps text-on-surface-variant px-2 mb-1 uppercase tracking-widest text-[10px] opacity-60">Navegar Tienda</p>
+          {storeLinks.map((link) => (
+            <Link
+              key={link.to}
+              to={link.to}
+              className="text-secondary flex items-center gap-4 px-2 py-2 hover:text-primary-container transition-colors"
+            >
+              <span className="material-symbols-outlined text-[20px]">{link.icon}</span>
+              <span className="font-label-caps text-label-caps">{link.label}</span>
+            </Link>
+          ))}
+        </div>
+        <button className="w-full bg-primary-container text-on-primary-container py-3 px-4 font-label-caps text-label-caps font-bold active:scale-[0.98] transition-transform electric-glow uppercase">
+          Crear Oferta
+        </button>
+        <div className="border-t border-outline-variant pt-4 flex flex-col gap-2">
           <button
             onClick={handleLogout}
             className="text-secondary flex items-center gap-4 px-2 py-2 hover:text-error transition-colors cursor-pointer w-full text-left"

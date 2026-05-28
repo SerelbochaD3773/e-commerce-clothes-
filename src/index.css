@@ -144,3 +144,50 @@
   height: 100%;
   z-index: -1;
 }
+
+.deep-space-gradient {
+  background: linear-gradient(to bottom, #131313 0%, #0a1b1d 100%);
+}
+
+.glass-nav {
+  background: rgba(19, 19, 19, 0.6) !important;
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-btn {
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.text-gradient-volt {
+  background: linear-gradient(135deg, #00f0ff, #dbfcff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+  100% { transform: translateY(0px); }
+}
+.float-anim {
+  animation: float 6s ease-in-out infinite;
+}
+
+.airy-interaction {
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+.airy-interaction:hover {
+  transform: scale(1.05);
+  filter: brightness(1.2);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
