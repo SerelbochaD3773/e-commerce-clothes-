@@ -4,15 +4,14 @@ import Swal from 'sweetalert2';
 import { saveLocalStorage } from '../helpers/local-storage';
 
 function LoginVelvora() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [remember, setRemember] = useState(false);
+  const [username, setUsername] = useState('');
+  const [pin, setPin] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!email || !password) {
+    if (!username || !pin) {
       Swal.fire({
         title: 'Error de Validación',
         text: 'Por favor complete todos los campos.',
@@ -25,9 +24,21 @@ function LoginVelvora() {
       return;
     }
 
+    if (pin.length < 4) {
+      Swal.fire({
+        title: 'PIN Inválido',
+        text: 'El PIN debe tener al menos 4 caracteres.',
+        icon: 'warning',
+        background: '#201f1f',
+        color: '#e5e2e1',
+        confirmButtonColor: '#00f0ff',
+        confirmButtonText: 'Entendido'
+      });
+      return;
+    }
+
     setLoading(true);
-    const username = email.split('@')[0];
-    saveLocalStorage('session', { username, email });
+    saveLocalStorage('session', { username, pin, loggedAt: new Date().toISOString() });
     setTimeout(() => {
       setLoading(false);
       Swal.fire({
@@ -77,47 +88,31 @@ function LoginVelvora() {
 
             <form onSubmit={handleSubmit} className="space-y-stack-md">
               <div className="space-y-1">
-                <label className="font-label-caps text-label-caps text-on-surface-variant block">EMAIL</label>
+                <label className="font-label-caps text-label-caps text-on-surface-variant block">USUARIO</label>
                 <div className="volt-border-focus flex items-center bg-surface-container border border-outline-variant rounded transition-all">
-                  <span className="material-symbols-outlined px-3 text-on-surface-variant">mail</span>
+                  <span className="material-symbols-outlined px-3 text-on-surface-variant">person</span>
                   <input
                     className="bg-transparent border-none text-on-surface w-full py-3 px-1 focus:outline-none focus:ring-0 placeholder:text-outline-variant/50"
-                    placeholder="nombre@velvora.com"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Tu nombre de usuario"
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
                   />
                 </div>
               </div>
 
               <div className="space-y-1">
-                <div className="flex justify-between items-center">
-                  <label className="font-label-caps text-label-caps text-on-surface-variant block">CONTRASEÑA</label>
-                  <a className="text-[10px] font-label-caps text-primary-container hover:underline" href="#forgot">¿OLVIDASTE TU CONTRASEÑA?</a>
-                </div>
+                <label className="font-label-caps text-label-caps text-on-surface-variant block">PIN</label>
                 <div className="volt-border-focus flex items-center bg-surface-container border border-outline-variant rounded transition-all">
-                  <span className="material-symbols-outlined px-3 text-on-surface-variant">lock</span>
+                  <span className="material-symbols-outlined px-3 text-on-surface-variant">pin</span>
                   <input
                     className="bg-transparent border-none text-on-surface w-full py-3 px-1 focus:outline-none focus:ring-0 placeholder:text-outline-variant/50"
-                    placeholder="••••••••"
+                    placeholder="Mín. 4 caracteres"
                     type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    value={pin}
+                    onChange={(e) => setPin(e.target.value)}
                   />
                 </div>
-              </div>
-
-              <div className="flex items-center gap-2 py-2">
-                <input
-                  className="rounded border-outline-variant bg-surface-container text-primary-container focus:ring-primary-container/20 w-4 h-4"
-                  id="remember"
-                  type="checkbox"
-                  checked={remember}
-                  onChange={(e) => setRemember(e.target.checked)}
-                />
-                <label className="text-label-caps font-label-caps text-on-surface-variant cursor-pointer select-none" htmlFor="remember">
-                  Mantenerme conectado
-                </label>
               </div>
 
               <button
@@ -128,39 +123,6 @@ function LoginVelvora() {
                 {loading ? 'INGRESANDO...' : 'INGRESAR'}
               </button>
             </form>
-
-            <div className="relative flex py-5 items-center">
-              <div className="flex-grow border-t border-outline-variant/30"></div>
-              <span className="flex-shrink mx-4 text-on-surface-variant font-label-caps text-[10px]">O CONTINUAR CON</span>
-              <div className="flex-grow border-t border-outline-variant/30"></div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <button
-                type="button"
-                className="flex items-center justify-center gap-2 border border-outline-variant py-3 rounded hover:bg-surface-container transition-colors active:scale-95 cursor-pointer"
-                onClick={() => {
-                  Swal.fire({ title: 'Google Login', text: 'Funcionalidad de demostración.', icon: 'info', background: '#201f1f', color: '#e5e2e1', confirmButtonColor: '#00f0ff' });
-                }}
-              >
-                <img
-                  alt="Google"
-                  className="w-4 h-4 grayscale"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkQyEFp1vXNSm7eBTl8AdnSSKG_RAcDu8uIjacyuHLrIbFn3Muv4UOLyqxb9aemSFRDInm5n0J_DYPfXcq0OAp586OWxyCDVH7rhu2zC4qUrU3DQ5fyfqOCUX8ENGePIZ8zquIAWCLpvCurm1sY-wB96JEQmdHnmT5Rb82i7hrZra-CxGhe-uI7LfpmQzZEOLfTdnL7yY1VvWnf_W1Fhc48ZRNxSiPQ7WWc7gkbsknxgcSqQgmRPNJ-zOdvrTEZNQErK9k8I955ks"
-                />
-                <span className="font-label-caps text-[11px]">GOOGLE</span>
-              </button>
-              <button
-                type="button"
-                className="flex items-center justify-center gap-2 border border-outline-variant py-3 rounded hover:bg-surface-container transition-colors active:scale-95 cursor-pointer"
-                onClick={() => {
-                  Swal.fire({ title: 'Apple Login', text: 'Funcionalidad de demostración.', icon: 'info', background: '#201f1f', color: '#e5e2e1', confirmButtonColor: '#00f0ff' });
-                }}
-              >
-                <span className="material-symbols-outlined text-[18px]">ios</span>
-                <span className="font-label-caps text-[11px]">APPLE ID</span>
-              </button>
-            </div>
           </div>
         </section>
 

@@ -15,11 +15,11 @@ import AdminLayout from "../layouts/AdminLayout"
 import StoreLayout from "../layouts/StoreLayout"
 
 let routerApp = [
+  { path: "/productos", element: <CatalogPage /> },
   {
     element: <StoreLayout />,
     children: [
       { path: "/", element: <MainPage /> },
-      { path: "/productos", element: <CatalogPage /> },
       { path: "/contacto", element: <ContactPage /> },
       { path: "/carrito", element: <CartPage /> },
     ],

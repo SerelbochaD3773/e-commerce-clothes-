@@ -1,14 +1,4 @@
-const categories = ["Abrigos", "Pantalones", "Calzado"]
-const sizes = ["XS", "S", "M", "L", "XL"]
-const colors = [
-  { label: "Negro", class: "bg-black" },
-  { label: "Gris oscuro", class: "bg-zinc-800" },
-  { label: "Gris claro", class: "bg-zinc-400" },
-  { label: "Cian", class: "bg-primary-container" },
-]
-const fits = ["Slim Fit", "Oversized", "Regular"]
-
-function CatalogFilterSidebar({ filters, onChange, onReset }) {
+function CatalogFilterSidebar({ filters, onChange, onReset, categories, sizes, colors, fits }) {
   function toggleCategory(cat) {
     const next = filters.categories.includes(cat)
       ? filters.categories.filter((c) => c !== cat)
@@ -17,15 +7,15 @@ function CatalogFilterSidebar({ filters, onChange, onReset }) {
   }
 
   function setSize(s) {
-    onChange({ ...filters, size: s })
+    onChange({ ...filters, size: filters.size === s ? null : s })
   }
 
   function setColor(c) {
-    onChange({ ...filters, color: c })
+    onChange({ ...filters, color: filters.color === c ? null : c })
   }
 
   function setFit(f) {
-    onChange({ ...filters, fit: f })
+    onChange({ ...filters, fit: filters.fit === f ? null : f })
   }
 
   function setPrice(e) {
@@ -84,7 +74,7 @@ function CatalogFilterSidebar({ filters, onChange, onReset }) {
               return (
                 <button
                   key={c.label}
-                  onClick={() => setColor(active ? null : c.label)}
+                  onClick={() => setColor(c.label)}
                   className={`w-6 h-6 rounded-full ${c.class} border border-outline outline outline-offset-2 transition-all ${
                     active ? "outline-primary-container" : "outline-transparent hover:outline-primary-container"
                   }`}
@@ -114,18 +104,19 @@ function CatalogFilterSidebar({ filters, onChange, onReset }) {
         </div>
 
         <div>
-          <h3 className="font-label-caps text-label-caps text-primary-container mb-4 uppercase">Precio</h3>
+          <h3 className="font-label-caps text-label-caps text-primary-container mb-4 uppercase">Precio Máximo</h3>
           <input
             type="range"
             min="0"
-            max="100"
-            value={filters.price / 5}
-            onChange={(e) => setPrice({ target: { value: e.target.value } })}
+            max="300000"
+            step="10000"
+            value={filters.price}
+            onChange={setPrice}
             className="w-full h-1 bg-surface-container-highest rounded-lg appearance-none cursor-pointer accent-primary-container"
           />
           <div className="flex justify-between mt-2 font-label-caps text-label-caps text-on-secondary-container">
             <span>$0</span>
-            <span>${filters.price}</span>
+            <span>${Number(filters.price).toLocaleString('es-CO')}</span>
           </div>
         </div>
 
