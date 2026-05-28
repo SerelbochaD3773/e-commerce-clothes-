@@ -28,11 +28,7 @@ function CategoryBars({ categories = [], loading }) {
             </div>
           ))}
         </div>
-      )}
-
-      <button className="mt-8 w-full border border-outline text-on-surface py-3 font-label-caps text-label-caps hover:bg-surface-container transition-colors uppercase">
-        Ver Reporte Detallado
-      </button>
+      )}      
     </div>
   )
 }
