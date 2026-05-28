@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react"
+import { Link } from "react-router-dom"
 import { end_points } from "../services/api"
 import { getLocalStorage } from "../helpers/local-storage"
 import { questionAlert, successAlert, errorAlert } from "../helpers/alerts"
@@ -156,6 +157,16 @@ function DashboardPage() {
   return (
     <div className="space-y-stack-lg">
       <DashboardHeader username={session?.username} />
+
+      <div className="flex justify-end">
+        <Link
+          to="/admin/reportes"
+          className="flex items-center gap-2 px-6 py-3 border border-primary-container text-primary-container font-label-caps text-label-caps hover:bg-primary-container/10 transition-all"
+        >
+          <span className="material-symbols-outlined text-[18px]">summarize</span>
+          VER REPORTE DETALLADO
+        </Link>
+      </div>
 
       <section className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
         <DashboardKpiCard
