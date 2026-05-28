@@ -1,7 +1,8 @@
 import { useState, useEffect, useMemo } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 import { end_points } from "../services/api"
 import { getLocalStorage } from "../helpers/local-storage"
+import { useCart } from "../context/CartContext"
 import CatalogFilterSidebar from "../components/CatalogFilterSidebar"
 
 const colorMap = {
@@ -22,8 +23,8 @@ function fixImageUrl(url) {
 }
 
 function CatalogPage() {
-  const navigate = useNavigate()
   const session = getLocalStorage("session")
+  const { dispatch } = useCart()
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [query, setQuery] = useState("")
@@ -283,7 +284,10 @@ function CatalogPage() {
                         <span className="font-headline-md text-headline-md text-primary-container">
                           ${Number(product.precio || 0).toLocaleString('es-CO')}
                         </span>
-                        <button className="flex items-center gap-2 font-label-caps text-label-caps uppercase px-6 py-2 bg-primary-container text-on-primary font-bold hover:shadow-[0_0_15px_rgba(0,240,255,0.4)] active:scale-95 transition-all">
+                        <button
+                          onClick={() => dispatch({ type: "ADD_ITEM", product })}
+                          className="flex items-center gap-2 font-label-caps text-label-caps uppercase px-6 py-2 bg-primary-container text-on-primary font-bold hover:shadow-[0_0_15px_rgba(0,240,255,0.4)] active:scale-95 transition-all"
+                        >
                           AÑADIR
                         </button>
                       </div>
