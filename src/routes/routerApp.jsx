@@ -3,10 +3,12 @@ import LoginVelvora from "../pages/LoginVelvora"
 import RegistroVelvora from "../pages/RegistroVelvora"
 import DashboardPage from "../pages/DashboardPage"
 import InventoryPage from "../pages/InventoryPage"
+import CatalogPage from "../pages/CatalogPage"
 import CustomerProducts from "../pages/CustomerProducts"
 import CartPage from "../pages/CartPage"
 import MainPage from "../pages/MainPage"
 import ContactPage from "../pages/ContactPage"
+import DetailedReportPage from "../pages/DetailedReportPage"
 import ProtectedRoute from "../pages/ProtectedRoute"
 import PublicRoute from "../pages/PublicRoute"
 import AdminLayout from "../layouts/AdminLayout"
@@ -17,7 +19,7 @@ let routerApp = [
     element: <StoreLayout />,
     children: [
       { path: "/", element: <MainPage /> },
-      { path: "/productos", element: <CustomerProducts /> },
+      { path: "/productos", element: <CatalogPage /> },
       { path: "/contacto", element: <ContactPage /> },
       { path: "/carrito", element: <CartPage /> },
     ],
@@ -37,6 +39,7 @@ let routerApp = [
         children: [
           { path: "/admin", element: <DashboardPage /> },
           { path: "/admin/productos", element: <InventoryPage /> },
+          { path: "/admin/reportes", element: <DetailedReportPage /> },
         ],
       },
     ],

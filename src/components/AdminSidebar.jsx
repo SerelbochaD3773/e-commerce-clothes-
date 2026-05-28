@@ -5,6 +5,7 @@ import { redirectAlert } from "../helpers/alerts"
 const links = [
   { to: "/admin", icon: "dashboard", label: "DASHBOARD" },
   { to: "/admin/productos", icon: "inventory_2", label: "INVENTARIO" },
+  { to: "/admin/reportes", icon: "summarize", label: "REPORTES" },
 ]
 
 const storeLinks = [
